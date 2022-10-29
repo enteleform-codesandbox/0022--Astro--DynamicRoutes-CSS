@@ -1,0 +1,25 @@
+---
+
+export async function getStaticPaths(){
+	const pageData = [
+		{slug:"Foo", moduleKey:"../DynamicRoutes/Foo.astro"},
+		{slug:"Bar", moduleKey:"../DynamicRoutes/Bar.astro"},
+	]
+
+	const astroModules = import.meta.glob("../DynamicRoutes/**/*.astro")
+
+	return (
+		pageData.map(({slug, moduleKey}) => ({
+			params: {slug                               },
+			props:  {AstroModule:astroModules[moduleKey]},
+		}))
+	)
+}
+
+const {AstroModule} = Astro.props
+const Page          = (await AstroModule()).default
+
+---
+
+
+<Page/>
